@@ -1,4 +1,4 @@
-export default interface Music {
+export interface Music {
   id: string,
   name: string,
   type: string

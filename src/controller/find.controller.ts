@@ -1,9 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import Music from '../model/Music.d'
-@Controller()
+import { FindService } from './../service/find.service';
+import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Music } from '../interface/Music.d'
+@Controller('find')
 export class FindController {
-  @Get('/recommend/list')
+  constructor(private readonly findService: FindService) {}
+  @Get('/recommendList')
+  @HttpCode(200)
   getRecommendList(): Array<Music> {
-    return []
+    return this.findService.getRecommendList()
   }
 }
