@@ -15,7 +15,7 @@ import { ApplicationModule } from './modules/application.module';
       port: 3306,
       username: 'root',
       password: 'zc123456',
-      database: 'DB_music',
+      database: 'db_music',
       entities: [],
       synchronize: true
     }),
