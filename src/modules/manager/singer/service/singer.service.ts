@@ -23,22 +23,37 @@ export class SingerService {
     })
   }
 
-  async getSinger(queryDTO: QuerySingerDTO): Promise<CreateSingerDTO[]> {
-    console.info(queryDTO)
-    let singers = []
+  async getSinger(queryDTO: QuerySingerDTO): Promise<{}> {
+    let pageSize = 10, pageNum = 1
+    if (queryDTO.pageSize) {
+      pageSize = queryDTO.pageSize
+    }
+    if (queryDTO.pageNum) {
+      pageNum = queryDTO.pageNum
+    }
+    let singers = [], total = 0
     await this.connection
-      .createQueryBuilder()
-      .select('singer')
-      .from(Singer, 'singer')
-      .where('singer.name LIKE :keyword')
+      .createQueryBuilder().select('singer').from(Singer, 'singer').where('singer.name LIKE :keyword')
       .setParameter('keyword', `%${queryDTO.keyword}%`)
-      .orderBy('singer.id', 'ASC')
       .getMany().then((result) => {
-      console.info(result)
-      singers = result
-    }).catch((err) => {
-      console.info(err)
-    })
-    return singers
+        total = result.length
+      }).catch((err) => {
+        console.info(err)
+        total = 0
+      })
+    await this.connection
+      .createQueryBuilder().select('singer').from(Singer, 'singer').where('singer.name LIKE :keyword')
+      .setParameter('keyword', `%${queryDTO.keyword}%`).orderBy('singer.id', 'ASC')
+      .offset(pageSize * (pageNum - 1)).limit(pageSize)
+      .getMany().then((result) => {
+        singers = result
+      }).catch((err) => {
+        console.info(err)
+        singers = []
+      })
+    return {
+      list: singers,
+      total
+    }
   }
 }

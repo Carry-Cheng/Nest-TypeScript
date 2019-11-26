@@ -13,7 +13,7 @@ export class ManagerSingerController {
   }
 
   @Get('/getSinger')
-  getSinger(@Query() query: QuerySingerDTO): Promise<CreateSingerDTO[]> {
+  getSinger(@Query() query: QuerySingerDTO): Promise<{}> {
     return this.singerService.getSinger(query)
   }
 }
