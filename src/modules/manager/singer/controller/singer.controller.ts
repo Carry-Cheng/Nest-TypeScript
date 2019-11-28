@@ -16,4 +16,9 @@ export class ManagerSingerController {
   getSinger(@Query() query: QuerySingerDTO): Promise<{}> {
     return this.singerService.getSinger(query)
   }
+
+  @Get('/searchSinger')
+  searchSinger(@Query() query: QuerySingerDTO): Promise<CreateSingerDTO[]> {
+    return this.singerService.searchSinger(query)
+  }
 }

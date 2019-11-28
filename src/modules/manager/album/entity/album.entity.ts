@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Singer } from './../../singer/entity/singer.entity'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
 @Entity()
 export class Album {
@@ -14,7 +15,9 @@ export class Album {
   @Column()
   albumInfo: string
 
-  @Column()
+  @Column({ type: 'datetime' })
   publishTime: Date
   
+  // @ManyToOne(() => Singer, singer => singer.albums)
+  // singer: Singer
 }

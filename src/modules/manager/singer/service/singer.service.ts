@@ -56,4 +56,20 @@ export class SingerService {
       total
     }
   }
+
+  async searchSinger(queryDTO: QuerySingerDTO): Promise<CreateSingerDTO[]> {
+    let singers = []
+    await this.connection
+      .createQueryBuilder().select('singer').from(Singer, 'singer')
+      .where('singer.id LIKE :keyword OR singer.name LIKE :keyword')
+      .setParameter('keyword', `%${queryDTO.keyword}%`)
+      .orderBy('singer.id', 'ASC')
+      .getMany().then((result) => {
+        singers = result
+      }).catch((err) => {
+        console.info(err)
+        singers = []
+      })
+    return singers
+  }
 }

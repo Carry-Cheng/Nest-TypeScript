@@ -4,6 +4,7 @@ import { Album } from '../entity/album.entity'
 import { CreateAlbumDTO } from '../dto/create-album.dto'
 import { QueryAlbumDTO } from '../dto/query-album.dto'
 import { Connection } from "typeorm"
+import { Singer } from '../../singer/entity/singer.entity'
 @Injectable()
 export class AlbumService {
   constructor(
@@ -32,25 +33,33 @@ export class AlbumService {
       pageNum = queryDTO.pageNum
     }
     let albums = [], total = 0
-    await this.connection
-      .createQueryBuilder().select('Album').from(Album, 'album').where('album.albumName LIKE :keyword')
-      .setParameter('keyword', `%${queryDTO.keyword}%`)
-      .getMany().then((result) => {
-        total = result.length
+    let sql1 = `
+      SELECT COUNT(*) AS total FROM album
+      LEFT JOIN singer singer ON singer.id = album.singerId
+      WHERE album.albumName LIKE '%${queryDTO.keyword}%'
+    `
+    let sql2 = `
+      SELECT album.id, albumName, singerId, albumInfo,
+        date_format(publishTime,'%Y-%m-%d') AS publishTime, singer.name AS singerName FROM album
+      LEFT JOIN singer singer ON singer.id = album.singerId
+      WHERE album.albumName LIKE '%${queryDTO.keyword}%'
+      ORDER BY album.id ASC
+      LIMIT ${pageSize * (pageNum - 1)}, ${pageSize}
+    `
+    await this.connection.manager.query(sql1)
+      .then(result => {
+        total = parseInt(result[0].total) || 0
       }).catch((err) => {
         console.info(err)
         total = 0
       })
-    await this.connection
-      .createQueryBuilder().select('Album').from(Album, 'album').where('album.albumName LIKE :keyword')
-      .setParameter('keyword', `%${queryDTO.keyword}%`).orderBy('album.id', 'ASC')
-      .offset(pageSize * (pageNum - 1)).limit(pageSize)
-      .getMany().then((result) => {
-        albums = result
-      }).catch((err) => {
-        console.info(err)
-        albums = []
-      })
+    await this.connection.manager.query(sql2)
+    .then(result => {
+      albums = result
+    }).catch((err) => {
+      console.info(err)
+      albums = []
+    })
     return {
       list: albums,
       total
