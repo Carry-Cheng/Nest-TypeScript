@@ -4,7 +4,6 @@ import { Album } from '../entity/album.entity'
 import { CreateAlbumDTO } from '../dto/create-album.dto'
 import { QueryAlbumDTO } from '../dto/query-album.dto'
 import { Connection } from "typeorm"
-import { Singer } from '../../singer/entity/singer.entity'
 @Injectable()
 export class AlbumService {
   constructor(
@@ -12,10 +11,10 @@ export class AlbumService {
   ) {}
   async createAlbum(AlbumDTO: CreateAlbumDTO) {
     let album = new Album()
-    album.albumName = AlbumDTO.albumName
-    album.singerId = AlbumDTO.singerId
-    album.albumInfo = AlbumDTO.albumInfo
-    album.publishTime = AlbumDTO.publishTime
+    album.name = AlbumDTO.albumName
+    album.singer_id = AlbumDTO.singerId
+    album.info = AlbumDTO.albumInfo
+    album.publish_time = AlbumDTO.publishTime
     await this.connection.manager.save(album)
       .then(album => {
         console.info(album.id)
@@ -64,5 +63,21 @@ export class AlbumService {
       list: albums,
       total
     }
+  }
+
+  async searchAlbum(queryDTO: QueryAlbumDTO): Promise<CreateAlbumDTO[]> {
+    let albums = []
+    await this.connection
+      .createQueryBuilder().select('album').from(Album, 'album')
+      .where('album.id LIKE :keyword OR album.albumName LIKE :keyword')
+      .setParameter('keyword', `%${queryDTO.keyword}%`)
+      .orderBy('album.id', 'ASC')
+      .getMany().then((result) => {
+        albums = result
+      }).catch((err) => {
+        console.info(err)
+        albums = []
+      })
+    return albums
   }
 }

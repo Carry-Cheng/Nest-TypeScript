@@ -1,24 +1,20 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Album } from "../../album/entity/album.entity"
 
-@Entity()
+@Entity('singer')
 export class Singer {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column('varchar', { default: null })
   name: string
 
-  @Column()
+  @Column('int', { default: null })
   sex: number
 
-  @Column()
+  @Column('varchar', { default: null })
   info: string
 
-  @Column()
+  @Column('varchar', { default: null })
   country: string
-
-  // @OneToMany(() => Album, album => album.singer)
-  // albums: Album[]
 }

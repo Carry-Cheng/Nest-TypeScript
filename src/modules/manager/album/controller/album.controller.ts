@@ -16,4 +16,10 @@ export class ManagerAlbumController {
   getAlbum(@Query() query: QueryAlbumDTO): Promise<{}> {
     return this.albumService.getAlbum(query)
   }
+
+  @Get('/searchAlbum')
+  searchAlbum(@Query() query: QueryAlbumDTO): Promise<CreateAlbumDTO[]> {
+    return this.albumService.searchAlbum(query)
+  }
+
 }

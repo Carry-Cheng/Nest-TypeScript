@@ -1,23 +1,20 @@
-import { Singer } from './../../singer/entity/singer.entity'
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity()
+@Entity('album')
 export class Album {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
-  albumName: string
+  @Column('varchar', { default: null })
+  name: string
 
-  @Column()
-  singerId: number
+  @Column('int', { default: null })
+  singer_id: number
 
-  @Column()
-  albumInfo: string
+  @Column('varchar', { default: null })
+  info: string
 
-  @Column({ type: 'datetime' })
-  publishTime: Date
-  
-  // @ManyToOne(() => Singer, singer => singer.albums)
-  // singer: Singer
+  @Column('datetime', { default: null })
+  publish_time: Date
+
 }

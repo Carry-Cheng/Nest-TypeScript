@@ -1,10 +1,19 @@
-import { Controller, Post } from "@nestjs/common";
+import { MusicService } from './../service/music.service';
+import { CreateMusicInfoDTO } from "./../dto/create-music-info.dto";
+import { Controller, Post, Body, Get, Query } from "@nestjs/common";
+import { QueryMusicInfoDTO } from '../dto/query-music-info.dto';
 
-@Controller('api/manager/music')
+@Controller('v1/manager/music')
 export class ManagerMusicController {
-  constructor() {}
-  @Post('/createMusic')
-  createMusic(): void {
-    
+  constructor(private readonly musicService: MusicService) {}
+  @Post('/createMusicInfo')
+  createMusic(@Body() createMusicInfoDTO: CreateMusicInfoDTO): void {
+    this.musicService.createMusicInfo(createMusicInfoDTO)
   }
+
+  @Get('/getMusicInfo')
+  getAlbum(@Query() query: QueryMusicInfoDTO): Promise<{}> {
+    return this.musicService.getMusicInfo(query)
+  }
+
 }
