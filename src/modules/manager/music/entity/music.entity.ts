@@ -7,4 +7,8 @@ export class Music {
 
   @Column('blob', { default: null })
   data: string
+
+  @Column('blob', { default: null })
+  lyric: string
+  
 }

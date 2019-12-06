@@ -32,9 +32,6 @@ export class MusicInfo {
   @Column('int', { default: null, name: 'album_id' })
   albumId: number
 
-  @Column('int', { default: null, name: 'lyric_id' })
-  lyricId: number
-
   @Column('datetime', { default: null, name: 'issue_time' })
   issueTime: Date
 }

@@ -37,17 +37,20 @@ export class MusicService {
     let musicInfos = [], total = 0
     let sql1 = `
       SELECT COUNT(*) AS total FROM music_info AS M
-      LEFT JOIN singer AS S ON M.singerId = S.id
-      LEFT JOIN album AS A ON M.albumId = A.id
-      WHERE M.name LIKE '%${queryDTO.keyword}%' OR S.name LIKE '%${queryDTO.keyword}%' OR A.album_name LIKE '%${queryDTO.keyword}%'
+      LEFT JOIN singer AS S ON M.singer_id = S.id
+      LEFT JOIN album AS A ON M.album_id = A.id
+      WHERE M.name LIKE '%${queryDTO.keyword}%' OR S.name LIKE '%${queryDTO.keyword}%' OR A.name LIKE '%${queryDTO.keyword}%'
     `
     let sql2 = `
-      SELECT M.id, M.name, M.hot, M.star, M.lyricist, M.composer, M.arranger, M.sourceId,
-      M.singerId, M.albumId, M.lyricId, date_format(M.issueTime,'%Y-%m-%d') AS issueTime, S.name AS singerName, A.albumName
+      SELECT M.id, M.name, M.hot, M.star, M.lyricist, M.composer, M.arranger, M.source_id AS sourceId,
+      M.singer_id AS singerId, M.album_id AS albumId,
+      date_format(M.issue_time,'%Y-%m-%d') AS issueTime,
+      date_format(A.publish_time,'%Y-%m-%d') AS publishTime,
+      S.name AS singerName, A.name AS albumName
       FROM music_info AS M
-      LEFT JOIN singer AS S ON M.singerId = S.id
-      LEFT JOIN album AS A ON M.albumId = A.id
-      WHERE M.name LIKE '%${queryDTO.keyword}%' OR S.name LIKE '%${queryDTO.keyword}%' OR A.album_name LIKE '%${queryDTO.keyword}%'
+      LEFT JOIN singer AS S ON M.singer_id = S.id
+      LEFT JOIN album AS A ON M.album_id = A.id
+      WHERE M.name LIKE '%${queryDTO.keyword}%' OR S.name LIKE '%${queryDTO.keyword}%' OR A.name LIKE '%${queryDTO.keyword}%'
       ORDER BY M.id ASC
       LIMIT ${pageSize * (pageNum - 1)}, ${pageSize}
     `

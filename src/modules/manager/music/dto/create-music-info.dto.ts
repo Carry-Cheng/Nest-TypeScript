@@ -9,6 +9,5 @@ export class CreateMusicInfoDTO {
   readonly lyricist: string
   readonly arranger: string
   readonly albumId: number
-  readonly lyricId: number
   readonly issueTime: Date
 }

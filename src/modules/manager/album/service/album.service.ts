@@ -1,9 +1,9 @@
 
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject } from '@nestjs/common'
 import { Album } from '../entity/album.entity'
 import { CreateAlbumDTO } from '../dto/create-album.dto'
 import { QueryAlbumDTO } from '../dto/query-album.dto'
-import { Connection } from "typeorm"
+import { Connection } from 'typeorm'
 @Injectable()
 export class AlbumService {
   constructor(
@@ -34,14 +34,14 @@ export class AlbumService {
     let albums = [], total = 0
     let sql1 = `
       SELECT COUNT(*) AS total FROM album
-      LEFT JOIN singer singer ON singer.id = album.singerId
-      WHERE album.albumName LIKE '%${queryDTO.keyword}%'
+      LEFT JOIN singer singer ON singer.id = album.singer_id
+      WHERE album.name LIKE '%${queryDTO.keyword}%'
     `
     let sql2 = `
-      SELECT album.id, albumName, singerId, albumInfo,
-        date_format(publishTime,'%Y-%m-%d') AS publishTime, singer.name AS singerName FROM album
-      LEFT JOIN singer singer ON singer.id = album.singerId
-      WHERE album.albumName LIKE '%${queryDTO.keyword}%'
+      SELECT album.id, album.name AS albumName, album.singer_id AS singerId, album.info AS albumInfo,
+        date_format(album.publish_time,'%Y-%m-%d') AS publishTime, singer.name AS singerName FROM album
+      LEFT JOIN singer singer ON singer.id = album.singer_id
+      WHERE album.name LIKE '%${queryDTO.keyword}%'
       ORDER BY album.id ASC
       LIMIT ${pageSize * (pageNum - 1)}, ${pageSize}
     `
@@ -69,7 +69,7 @@ export class AlbumService {
     let albums = []
     await this.connection
       .createQueryBuilder().select('album').from(Album, 'album')
-      .where('album.id LIKE :keyword OR album.albumName LIKE :keyword')
+      .where('album.id LIKE :keyword OR album.name LIKE :keyword')
       .setParameter('keyword', `%${queryDTO.keyword}%`)
       .orderBy('album.id', 'ASC')
       .getMany().then((result) => {
