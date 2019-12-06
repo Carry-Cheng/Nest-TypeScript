@@ -13,11 +13,11 @@ export class MusicService {
   async createMusicInfo(createMusicInfoDTO: CreateMusicInfoDTO) {
     let musicInfo = new MusicInfo()
     musicInfo.name = createMusicInfoDTO.name
-    musicInfo.singer_id = createMusicInfoDTO.singerId
+    musicInfo.singerId = createMusicInfoDTO.singerId
     musicInfo.composer = createMusicInfoDTO.composer
     musicInfo.lyricist = createMusicInfoDTO.lyricist
-    musicInfo.album_id = createMusicInfoDTO.albumId
-    musicInfo.issue_time = createMusicInfoDTO.issueTime
+    musicInfo.albumId = createMusicInfoDTO.albumId
+    musicInfo.issueTime = createMusicInfoDTO.issueTime
     await this.connection.manager.save(musicInfo)
       .then(model => {
         console.info(model.id)

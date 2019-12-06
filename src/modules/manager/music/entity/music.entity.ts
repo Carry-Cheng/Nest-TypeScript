@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity()
+@Entity('music')
 export class Music {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column('blob', { default: null })
   data: string
 }

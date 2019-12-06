@@ -12,9 +12,9 @@ export class AlbumService {
   async createAlbum(AlbumDTO: CreateAlbumDTO) {
     let album = new Album()
     album.name = AlbumDTO.albumName
-    album.singer_id = AlbumDTO.singerId
+    album.singerId = AlbumDTO.singerId
     album.info = AlbumDTO.albumInfo
-    album.publish_time = AlbumDTO.publishTime
+    album.publishTime = AlbumDTO.publishTime
     await this.connection.manager.save(album)
       .then(album => {
         console.info(album.id)
