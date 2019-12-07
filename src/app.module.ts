@@ -1,33 +1,26 @@
+import { HttpExceptionFilter } from 'src/filters/HttpExceptionFilter';
 import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-// import { TypeOrmModule } from '@nestjs/typeorm'
-// import { Connection } from 'typeorm'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 // 所有模块
 import { ApplicationModule } from './modules/application.module';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root',
-    //   password: 'zc123456',
-    //   database: 'db_music',
-    //   entities: [],
-    //   synchronize: true
-    // }),
     ApplicationModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter
+    }
+  ]
 })
 export class AppModule implements NestModule {
-  // constructor(private readonly connection: Connection) {
-  //   // console.info(this.connection)
-  // }
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)

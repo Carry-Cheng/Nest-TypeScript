@@ -5,10 +5,16 @@ export class Music {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column('blob', { default: null })
+  @Column('longblob', { default: null })
   data: string
 
-  @Column('blob', { default: null })
+  @Column('int', { default: null, name: 'data_size' })
+  dataSize: number
+
+  @Column('longblob', { default: null })
   lyric: string
+
+  @Column('int', { default: null, name: 'lyric_size' })
+  lyricSize: number
   
 }
