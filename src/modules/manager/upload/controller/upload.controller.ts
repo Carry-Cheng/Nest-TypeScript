@@ -16,8 +16,8 @@ export class ManagerUploadController {
 
   @Post('/lyric')
   @UseInterceptors(FileInterceptor('file'))
-  uploadLyric(@UploadedFile() file, @Body() uploadDTO: UploadDTO): void {
-    this.uploadService.uploadLyric(file, uploadDTO)
+  async uploadLyric(@UploadedFile() file, @Body() uploadDTO: UploadDTO): Promise<any> {
+    return this.uploadService.uploadLyric(file, uploadDTO)
   }
 
 }
