@@ -30,7 +30,7 @@ export class UploadService {
           sourceId = res[0].source_id
         }
       }).catch(error => {
-        throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       })
       if (hasSourceId) {
         await this.connection.manager.createQueryBuilder().update(Music)
@@ -38,7 +38,7 @@ export class UploadService {
         .where("id = :id", {id: sourceId})
         .execute()
         .catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
       } else {
         let music = new Music()
@@ -48,14 +48,14 @@ export class UploadService {
         .then(model => {
           sourceId = model.id
         }).catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
         await this.connection.manager.createQueryBuilder().update(MusicInfo)
         .set({sourceId: sourceId})
         .where("id = :id", {id: id})
         .execute()
         .catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
       }
       return sourceId
@@ -72,8 +72,7 @@ export class UploadService {
     if (file) {
       let { mimetype, buffer, size, originalname } = file
       let regExp = /\S.lrc/g
-      console.info(regExp.test(originalname))
-      if (mimetype !== 'application/octet-stream' || !regExp.test(originalname)) {
+      if (mimetype !== 'application/octet-stream' && !regExp.test(originalname)) {
         throw new HttpException('歌词格式不是.lrc格式', HttpStatus.INTERNAL_SERVER_ERROR)
       }
       // find source_id
@@ -86,7 +85,7 @@ export class UploadService {
           sourceId = res[0].source_id
         }
       }).catch(error => {
-        throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       })
       if (hasSourceId) {
         await this.connection.manager.createQueryBuilder().update(Music)
@@ -94,7 +93,7 @@ export class UploadService {
         .where("id = :id", {id: sourceId})
         .execute()
         .catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
       } else {
         let music = new Music()
@@ -104,14 +103,14 @@ export class UploadService {
         .then(model => {
           sourceId = model.id
         }).catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
         await this.connection.manager.createQueryBuilder().update(MusicInfo)
         .set({sourceId: sourceId})
         .where("id = :id", {id: id})
         .execute()
         .catch(error => {
-          throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
+          throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         })
       }
       return sourceId

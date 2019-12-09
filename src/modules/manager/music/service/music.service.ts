@@ -1,5 +1,5 @@
 
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
 import { Connection } from "typeorm"
 import { CreateMusicInfoDTO } from "../dto/create-music-info.dto";
 import { MusicInfo } from "../entity/music-info.entity";
@@ -22,7 +22,7 @@ export class MusicService {
       .then(model => {
         console.info(model.id)
       }).catch(error => {
-        console.info(error)
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       })
   }
 
@@ -46,10 +46,12 @@ export class MusicService {
       M.singer_id AS singerId, M.album_id AS albumId,
       date_format(M.issue_time,'%Y-%m-%d') AS issueTime,
       date_format(A.publish_time,'%Y-%m-%d') AS publishTime,
-      S.name AS singerName, A.name AS albumName
+      S.name AS singerName, A.name AS albumName,
+      MC.data_size AS dataSize, MC.lyric_size AS lyricSize
       FROM music_info AS M
       LEFT JOIN singer AS S ON M.singer_id = S.id
       LEFT JOIN album AS A ON M.album_id = A.id
+      LEFT JOIN music AS MC ON M.source_id = MC.id
       WHERE M.name LIKE '%${queryDTO.keyword}%' OR S.name LIKE '%${queryDTO.keyword}%' OR A.name LIKE '%${queryDTO.keyword}%'
       ORDER BY M.id ASC
       LIMIT ${pageSize * (pageNum - 1)}, ${pageSize}
@@ -57,16 +59,16 @@ export class MusicService {
     await this.connection.manager.query(sql1)
       .then(result => {
         total = parseInt(result[0].total) || 0
-      }).catch((err) => {
-        console.info(err)
+      }).catch((error) => {
         total = 0
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
       })
     await this.connection.manager.query(sql2)
     .then(result => {
       musicInfos = result
-    }).catch((err) => {
-      console.info(err)
+    }).catch((error) => {
       musicInfos = []
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
     })
     return {
       list: musicInfos,
