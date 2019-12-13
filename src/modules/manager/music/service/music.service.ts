@@ -13,6 +13,8 @@ export class MusicService {
   async createMusicInfo(createMusicInfoDTO: CreateMusicInfoDTO) {
     let musicInfo = new MusicInfo()
     musicInfo.name = createMusicInfoDTO.name
+    musicInfo.hot = 0
+    musicInfo.star = 0
     musicInfo.singerId = createMusicInfoDTO.singerId
     musicInfo.composer = createMusicInfoDTO.composer
     musicInfo.lyricist = createMusicInfoDTO.lyricist
