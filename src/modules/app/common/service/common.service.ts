@@ -9,7 +9,6 @@ export class CommonService {
   ) {}
 
   async getSource(query: QuerySourceDTO) :Promise<{}> {
-    console.info('getSource')
     let data = null
     let sql = `
     SELECT data FROM music
@@ -23,8 +22,6 @@ export class CommonService {
     }).catch((error) => {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
     })
-    console.info('end getSource')
-    console.info(data)
     return data
   }
 

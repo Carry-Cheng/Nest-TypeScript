@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res } from "@nestjs/common";
+import { Controller, Get, Query, Res, Next } from "@nestjs/common";
 import { CommonService } from "../service/common.service";
 import { QuerySourceDTO } from "../dto/query-source.dto";
 import { Response } from 'express';
@@ -8,16 +8,22 @@ export class CommonController {
   constructor(private readonly commonService: CommonService) {}
 
   @Get('/source')
-  getSource(@Query() query: QuerySourceDTO) {
-    let data = null;
-    (async () => {
-      console.info('--------in------')
-      let result = await this.commonService.getSource(query)
-      console.info(result)
-    })()
-    
-    console.info('------out------')
-    return data
+  async getSource(@Query() query: QuerySourceDTO, @Res() response: Response): Promise<{}> {
+    await this.commonService.getSource(query).then((res: any) => {
+      response.send({
+        code: 200,
+        data: res,
+        message: 'SUCCESS'
+      })
+    }).catch(error => {
+      response.send({
+        code: 500,
+        data: null,
+        message: error
+      })
+    })
+    response.end()
+    return null
   }
 
   @Get('/download')
@@ -33,6 +39,12 @@ export class CommonController {
         code: 200,
         data: res,
         message: 'SUCCESS'
+      })
+    }).catch(error => {
+      response.send({
+        code: 500,
+        data: null,
+        message: error
       })
     })
     response.end()
